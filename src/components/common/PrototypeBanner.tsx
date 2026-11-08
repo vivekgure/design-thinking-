@@ -1,0 +1,73 @@
+import React from 'react';
+import { useApp } from '../../context/AppContext';
+import { UserRole } from '../../types';
+import { Shield, Sparkles, RefreshCw, UserCheck } from 'lucide-react';
+
+export const PrototypeBanner: React.FC = () => {
+  const { currentUser, switchRole, resetDemoData } = useApp();
+
+  const roles: { role: UserRole; label: string; name: string }[] = [
+    { role: 'citizen', label: 'Citizen', name: 'Priya Sundaram' },
+    { role: 'government', label: 'Government', name: 'Dr. Arumugam, IAS' },
+    { role: 'ngo', label: 'NGO Lead', name: 'Green Earth Chennai' },
+    { role: 'admin', label: 'Platform Admin', name: 'System Admin' },
+  ];
+
+  return (
+    <div className="bg-[#11533e] text-white text-xs py-1.5 px-4 border-b border-[#1f8b68]/40 shadow-sm">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 bg-[#1f8b68] text-white px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider text-[10px]">
+            <Sparkles className="w-3 h-3" />
+            University Prototype
+          </span>
+          <span className="hidden sm:inline text-emerald-100 font-medium">
+            Design Thinking & Civic Innovation • Demonstration Platform with Simulated GCC Workflows
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-emerald-200 hidden md:inline flex items-center gap-1">
+            <UserCheck className="w-3.5 h-3.5" />
+            Active Perspective:
+          </span>
+          <div className="flex items-center gap-1 bg-[#0d4030] p-0.5 rounded-lg border border-[#1f8b68]/50">
+            {roles.map((r) => {
+              const isActive = currentUser.role === r.role;
+              return (
+                <button
+                  key={r.role}
+                  type="button"
+                  onClick={() => switchRole(r.role)}
+                  className={`px-2.5 py-1 rounded-md font-medium text-[11px] transition-all flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-white text-[#11533e] font-bold shadow-sm'
+                      : 'text-emerald-200 hover:text-white hover:bg-white/10'
+                  }`}
+                  title={`Switch to ${r.label} perspective (${r.name})`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#176B50]' : 'bg-emerald-400'}`} />
+                  <span>{r.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm('Reset sample demonstration data to default state?')) {
+                resetDemoData();
+              }
+            }}
+            className="text-emerald-300 hover:text-white p-1 hover:bg-white/10 rounded transition-colors ml-1"
+            title="Reset Sample Data"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
