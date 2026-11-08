@@ -34,7 +34,7 @@ export const CommunityFeed: React.FC = () => {
   } = useApp();
 
   const [activeFilter, setActiveFilter] = useState<'latest' | 'trending' | 'most_supported' | 'unresolved'>('latest');
-  const [selectedLocality, setSelectedLocality] = useState<string>('All Localities');
+  const [selectedLocality, setSelectedLocality] = useState<string>('All India');
   const [selectedCategory, setSelectedCategory] = useState<string>('All Categories');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -42,7 +42,7 @@ export const CommunityFeed: React.FC = () => {
   // Filter & sort posts
   let filteredPosts = posts.filter((post) => {
     // Locality filter
-    if (selectedLocality !== 'All Localities' && post.locality !== selectedLocality) {
+    if (selectedLocality !== 'All Localities' && selectedLocality !== 'All India' && post.locality !== selectedLocality) {
       return false;
     }
     // Category filter
@@ -114,10 +114,10 @@ export const CommunityFeed: React.FC = () => {
                 <MapPin className="w-3.5 h-3.5 text-[#176B50]" />
                 Localities
               </h4>
-              {selectedLocality !== 'All Localities' && (
+              {selectedLocality !== 'All India' && selectedLocality !== 'All Localities' && (
                 <button
                   type="button"
-                  onClick={() => setSelectedLocality('All Localities')}
+                  onClick={() => setSelectedLocality('All India')}
                   className="text-[10px] text-[#176B50] font-semibold hover:underline"
                 >
                   Reset
@@ -125,7 +125,7 @@ export const CommunityFeed: React.FC = () => {
               )}
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1 max-h-80 overflow-y-auto pr-1">
               {LOCALITIES.map((loc) => {
                 const isActive = selectedLocality === loc;
                 return (
@@ -139,7 +139,7 @@ export const CommunityFeed: React.FC = () => {
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    <span>{loc === 'All Localities' ? '🌐 All Communities' : `r/${loc}`}</span>
+                    <span>{loc === 'All India' || loc === 'All Localities' ? '🇮🇳 All India' : `r/${loc}`}</span>
                     {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#176B50]" />}
                   </button>
                 );
@@ -323,10 +323,10 @@ export const CommunityFeed: React.FC = () => {
           </div>
 
           {/* Active Filter Indicators */}
-          {(selectedLocality !== 'All Localities' || selectedCategory !== 'All Categories' || searchQuery) && (
+          {(selectedLocality !== 'All Localities' && selectedLocality !== 'All India' || selectedCategory !== 'All Categories' || searchQuery) && (
             <div className="flex items-center gap-2 text-xs text-slate-600 bg-slate-100/80 px-3 py-2 rounded-xl">
               <span>Filtering by:</span>
-              {selectedLocality !== 'All Localities' && (
+              {selectedLocality !== 'All Localities' && selectedLocality !== 'All India' && (
                 <span className="bg-white font-bold px-2 py-0.5 rounded border border-slate-200 text-[#176B50]">
                   r/{selectedLocality}
                 </span>
@@ -344,7 +344,7 @@ export const CommunityFeed: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedLocality('All Localities');
+                  setSelectedLocality('All India');
                   setSelectedCategory('All Categories');
                   setSearchQuery('');
                 }}

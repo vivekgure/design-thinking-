@@ -33,7 +33,7 @@ export const HomePage: React.FC = () => {
   const issuesResolved = complaints.filter(c => c.status === 'Resolved').length;
   const verifiedOrgsCount = organisations.filter(o => o.isVerified).length;
   const ongoingProjectsCount = projects.filter(p => p.status === 'In Progress' || p.status === 'Initiated').length;
-  const activeCommunitiesCount = 8; // Tambaram, Chromepet, Pallavaram, Guindy, Velachery, etc.
+  const activeCommunitiesCount = new Set(complaints.map(c => c.locality)).size;
 
   // Trending complaints (most supported)
   const trendingComplaints = [...complaints]
@@ -184,8 +184,8 @@ export const HomePage: React.FC = () => {
                 {t('stats.subtitle', 'Demonstration platform statistics (simulated data for university project evaluation).')}
               </p>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-600">
-              Chennai Metropolitan Area
+            <span className="text-xs font-semibold px-2.5 py-1 rounded bg-[#E8F5EE] text-[#176B50] border border-[#c8e7d7]">
+              🇮🇳 Pan-India Active Coverage
             </span>
           </div>
 

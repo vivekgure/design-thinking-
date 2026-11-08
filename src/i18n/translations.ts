@@ -551,3 +551,4 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.save': 'సేవ్ చేయండి'
   }
 };
+

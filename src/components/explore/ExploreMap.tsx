@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Complaint, ComplaintStatus } from '../../types';
-import { LOCALITIES, CATEGORIES } from '../../data/mockData';
+import { LOCALITIES, CATEGORIES, INDIA_CITY_COORDINATES } from '../../data/mockData';
 import L from 'leaflet';
 import {
   MapPin,
@@ -13,7 +13,9 @@ import {
   ExternalLink,
   Layers,
   Sparkles,
-  Info
+  Info,
+  Compass,
+  Maximize2
 } from 'lucide-react';
 
 export const ExploreMap: React.FC = () => {
@@ -22,44 +24,48 @@ export const ExploreMap: React.FC = () => {
     setSelectedComplaintId,
     setActiveTab,
     supportComplaint,
-    currentUser
+    currentUser,
+    t
   } = useApp();
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersGroupRef = useRef<L.LayerGroup | null>(null);
 
-  const [selectedLocality, setSelectedLocality] = useState('All Localities');
+  const [selectedLocality, setSelectedLocality] = useState('All India');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedPinComplaint, setSelectedPinComplaint] = useState<Complaint | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Center coordinates for India (Nagpur / Central India hub)
+  const defaultCenter: [number, number] = [20.5937, 78.9629];
+  const defaultZoom = 5;
+
   // Strict privacy boundary: Only show public & anonymous complaints on the map. Never private!
   const mapComplaints = complaints.filter((c) => {
     if (c.visibility === 'private') return false;
-    if (selectedLocality !== 'All Localities' && c.locality !== selectedLocality) return false;
+    if (selectedLocality !== 'All India' && selectedLocality !== 'All Localities' && c.locality !== selectedLocality) return false;
     if (selectedCategory !== 'All Categories' && c.category !== selectedCategory) return false;
     if (statusFilter !== 'All' && c.status !== statusFilter) return false;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      if (!c.title.toLowerCase().includes(q) && !c.address.toLowerCase().includes(q)) return false;
+      if (!c.title.toLowerCase().includes(q) && !c.address.toLowerCase().includes(q) && !c.locality.toLowerCase().includes(q)) return false;
     }
     return true;
   });
 
-  // Center coordinates for Chennai South zone
-  const defaultCenter: [number, number] = [12.9516, 80.1462]; // Chromepet / Tambaram hub
-
-  // Initialize Leaflet Map
+  // Initialize Leaflet Map centered on India
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
         center: defaultCenter,
-        zoom: 12,
-        scrollWheelZoom: false
+        zoom: defaultZoom,
+        minZoom: 4,
+        maxZoom: 18,
+        scrollWheelZoom: true
       });
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -101,58 +107,79 @@ export const ExploreMap: React.FC = () => {
         html: `
           <div style="
             background-color: ${pinColor};
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             display: flex;
             align-items: center;
             justify-content: center;
             border: 2px solid white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.35);
             cursor: pointer;
+            transition: transform 0.2s ease;
           ">
             <div style="
-              width: 12px;
-              height: 12px;
+              width: 10px;
+              height: 10px;
               background-color: white;
               border-radius: 50%;
               transform: rotate(45deg);
             "></div>
           </div>
         `,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
       });
 
       const marker = L.marker([c.latitude, c.longitude], { icon: customIcon });
 
       marker.on('click', () => {
         setSelectedPinComplaint(c);
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.flyTo([c.latitude, c.longitude], 13, { duration: 0.8 });
+        }
       });
 
       markersGroupRef.current?.addLayer(marker);
     });
   }, [mapComplaints]);
 
-  // Center map on selected locality
+  // Center map on selected locality or pan-India
   const handleLocalityChange = (loc: string) => {
     setSelectedLocality(loc);
-    const localityCoords: Record<string, [number, number]> = {
-      'Tambaram': [12.9249, 80.1197],
-      'Chromepet': [12.9516, 80.1462],
-      'Pallavaram': [12.9675, 80.1491],
-      'Velachery': [12.9815, 80.2180],
-      'Guindy': [13.0067, 80.2026],
-      'Anna Nagar': [13.0850, 80.2101],
-      'Chennai': [13.0827, 80.2707],
-    };
+    if (!mapInstanceRef.current) return;
 
-    if (mapInstanceRef.current && localityCoords[loc]) {
-      mapInstanceRef.current.flyTo(localityCoords[loc], 13);
+    if (loc === 'All India' || loc === 'All Localities') {
+      mapInstanceRef.current.flyTo(defaultCenter, defaultZoom, { duration: 1.5 });
+    } else if (INDIA_CITY_COORDINATES[loc]) {
+      mapInstanceRef.current.flyTo(INDIA_CITY_COORDINATES[loc], 12, { duration: 1.2 });
     }
   };
+
+  const resetToOverallIndia = () => {
+    setSelectedLocality('All India');
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo(defaultCenter, defaultZoom, { duration: 1.5 });
+    }
+  };
+
+  // Quick jump major hubs
+  const majorHubs = [
+    'All India',
+    'Delhi NCR',
+    'Mumbai',
+    'Bengaluru',
+    'Hyderabad',
+    'Chennai',
+    'Kolkata',
+    'Pune',
+    'Ahmedabad',
+    'Jaipur',
+    'Lucknow',
+    'Kochi'
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 text-left">
@@ -160,14 +187,14 @@ export const ExploreMap: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EE] text-[#176B50] font-semibold text-xs border border-[#c8e7d7]">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>Geospatial Civic Intelligence</span>
+            <Compass className="w-3.5 h-3.5" />
+            <span>🇮🇳 Pan-India Geospatial Civic Intelligence</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
-            Explore Local Issues & Interactive Map
+            Explore Civic Issues Across India
           </h1>
           <p className="text-xs text-slate-500">
-            OpenStreetMap visualization of verified public complaints across Chennai localities.
+            OpenStreetMap visualization of verified public complaints across Indian states, metro cities, and local zones.
           </p>
         </div>
 
@@ -193,62 +220,116 @@ export const ExploreMap: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-center gap-3">
-        <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search neighborhood, street, or issue description..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#176B50]"
-          />
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+        <div className="flex flex-col md:flex-row items-center gap-3">
+          <div className="relative flex-1 w-full">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search city, state, street, or issue description across India..."
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#176B50]"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
+            <select
+              value={selectedLocality}
+              onChange={(e) => handleLocalityChange(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-800 font-semibold"
+            >
+              {LOCALITIES.map((l) => (
+                <option key={l} value={l}>{l === 'All India' ? '🇮🇳 All India' : l}</option>
+              ))}
+            </select>
+
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-800"
+            >
+              <option value="All Categories">All Categories</option>
+              {CATEGORIES.map((c) => (
+                <option key={c.name} value={c.name}>{c.name}</option>
+              ))}
+            </select>
+
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-800"
+            >
+              <option value="All">All Statuses</option>
+              <option value="Submitted">Submitted</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Verified">Verified</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+
+            <button
+              type="button"
+              onClick={resetToOverallIndia}
+              className="px-3.5 py-2 rounded-xl bg-[#E8F5EE] hover:bg-emerald-100 text-[#176B50] font-bold text-xs flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+              title="Reset map view to overall India"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span>Full India View</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
-          <select
-            value={selectedLocality}
-            onChange={(e) => handleLocalityChange(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-800"
-          >
-            {LOCALITIES.map((l) => (
-              <option key={l} value={l}>{l}</option>
-            ))}
-          </select>
+        {/* Quick-Jump City Chips Bar */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 text-xs border-t border-slate-100">
+          <span className="text-[11px] text-slate-400 font-medium shrink-0 mr-1">Quick Jump:</span>
+          {majorHubs.map((hub) => {
+            const isActive = selectedLocality === hub;
+            const count = hub === 'All India' 
+              ? complaints.filter(c => c.visibility !== 'private').length
+              : complaints.filter(c => c.locality === hub && c.visibility !== 'private').length;
 
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-800"
-          >
-            <option value="All Categories">All Categories</option>
-            {CATEGORIES.map((c) => (
-              <option key={c.name} value={c.name}>{c.name}</option>
-            ))}
-          </select>
-
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-800"
-          >
-            <option value="All">All Statuses</option>
-            <option value="Submitted">Submitted</option>
-            <option value="Under Review">Under Review</option>
-            <option value="Verified">Verified</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Resolved">Resolved</option>
-          </select>
+            return (
+              <button
+                key={hub}
+                type="button"
+                onClick={() => handleLocalityChange(hub)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#176B50] text-white shadow-xs'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                }`}
+              >
+                <span>{hub === 'All India' ? '🇮🇳 All India' : hub}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                  isActive ? 'bg-white/20 text-white' : 'bg-white text-slate-600'
+                }`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Map & Detail Split View */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Map Container (8 cols) */}
-        <div className="lg:col-span-8 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs h-[500px] sm:h-[600px] relative overflow-hidden">
+        <div className="lg:col-span-8 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs h-[520px] sm:h-[620px] relative overflow-hidden">
           <div ref={mapContainerRef} className="w-full h-full rounded-xl" />
-          <span className="absolute bottom-5 right-5 z-20 bg-white/90 backdrop-blur-xs text-[10px] text-slate-500 px-2 py-1 rounded shadow-xs">
-            Showing {mapComplaints.length} public grievances
+          
+          {/* Floating full-country view button */}
+          <button
+            type="button"
+            onClick={resetToOverallIndia}
+            className="absolute top-6 right-6 z-20 bg-white/95 hover:bg-white text-slate-800 text-xs font-bold px-3 py-2 rounded-xl shadow-md border border-slate-200 backdrop-blur-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-102"
+          >
+            <Compass className="w-4 h-4 text-[#176B50]" />
+            <span>🇮🇳 Reset to Entire India</span>
+          </button>
+
+          <span className="absolute bottom-5 right-5 z-20 bg-white/90 backdrop-blur-xs text-[11px] font-semibold text-slate-700 px-3 py-1.5 rounded-lg shadow-sm border border-slate-200">
+            Showing {mapComplaints.length} public grievances across India
           </span>
         </div>
 
@@ -263,6 +344,13 @@ export const ExploreMap: React.FC = () => {
                 <span className="font-bold text-xs uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800">
                   {selectedPinComplaint.status}
                 </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 text-xs text-[#176B50] font-bold">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>r/{selectedPinComplaint.locality}</span>
+                <span className="text-slate-300">•</span>
+                <span className="text-slate-600 font-semibold">{selectedPinComplaint.category}</span>
               </div>
 
               <h3 className="font-bold text-base text-slate-900 leading-snug">
@@ -285,8 +373,8 @@ export const ExploreMap: React.FC = () => {
               )}
 
               <div className="space-y-1.5 text-xs text-slate-500 pt-2 border-t border-slate-100">
-                <div className="flex items-center gap-1.5 font-medium text-slate-700">
-                  <MapPin className="w-3.5 h-3.5 text-[#176B50]" />
+                <div className="flex items-start gap-1.5 font-medium text-slate-700">
+                  <MapPin className="w-3.5 h-3.5 text-[#176B50] shrink-0 mt-0.5" />
                   <span>{selectedPinComplaint.address}</span>
                 </div>
                 <div className="flex items-center justify-between text-xs pt-1">
@@ -324,27 +412,37 @@ export const ExploreMap: React.FC = () => {
             </div>
           ) : (
             <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs text-center text-slate-400 text-xs space-y-3">
-              <MapPin className="w-8 h-8 text-slate-300 mx-auto" />
-              <p>Click on any pin on the map to inspect issue details, view evidence photos, and track resolution.</p>
+              <Compass className="w-8 h-8 text-[#176B50]/60 mx-auto" />
+              <p className="font-semibold text-slate-700">Overall India Map View</p>
+              <p>Click on any marker across India to inspect the localized civic grievance, review photos, and follow government and NGO collaboration progress.</p>
             </div>
           )}
 
           {/* Quick List of Localities */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-2 text-xs">
-            <h4 className="font-bold text-xs uppercase tracking-wider text-slate-700 mb-2">
-              Browse by Localities
+            <h4 className="font-bold text-xs uppercase tracking-wider text-slate-700 mb-2 flex items-center justify-between">
+              <span>Explore Cities Across India</span>
+              <span className="text-[10px] text-slate-400 font-normal">Select to Zoom</span>
             </h4>
-            <div className="grid grid-cols-2 gap-1.5">
-              {LOCALITIES.filter(l => l !== 'All Localities').map((loc) => {
-                const count = complaints.filter(c => c.locality === loc && c.visibility !== 'private').length;
+            <div className="grid grid-cols-2 gap-1.5 max-h-80 overflow-y-auto pr-1">
+              {LOCALITIES.map((loc) => {
+                const count = loc === 'All India'
+                  ? complaints.filter(c => c.visibility !== 'private').length
+                  : complaints.filter(c => c.locality === loc && c.visibility !== 'private').length;
+                const isSelected = selectedLocality === loc;
+
                 return (
                   <button
                     key={loc}
                     type="button"
                     onClick={() => handleLocalityChange(loc)}
-                    className="p-2 rounded-lg bg-slate-50 hover:bg-[#E8F5EE] hover:text-[#176B50] text-left transition-colors text-xs font-semibold flex items-center justify-between"
+                    className={`p-2 rounded-lg text-left transition-colors text-xs font-semibold flex items-center justify-between cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#E8F5EE] text-[#176B50] font-bold ring-1 ring-[#176B50]'
+                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700'
+                    }`}
                   >
-                    <span>{loc}</span>
+                    <span className="truncate pr-1">{loc === 'All India' ? '🇮🇳 All India' : loc}</span>
                     <span className="text-[10px] text-slate-400 font-mono">{count}</span>
                   </button>
                 );

@@ -23,7 +23,8 @@ import {
   INITIAL_COMMENTS,
   INITIAL_PROPOSALS,
   INITIAL_PROJECTS,
-  INITIAL_NOTIFICATIONS
+  INITIAL_NOTIFICATIONS,
+  INDIA_CITY_COORDINATES
 } from '../data/mockData';
 import { Language, translations } from '../i18n/translations';
 
@@ -143,13 +144,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [complaints, setComplaints] = useState<Complaint[]>(() => {
-    const saved = localStorage.getItem('voxly_complaints');
-    return saved ? JSON.parse(saved) : INITIAL_COMPLAINTS;
+    const saved = localStorage.getItem('voxly_complaints_v2') || localStorage.getItem('voxly_complaints');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.some(c => c.locality === 'Delhi NCR' || c.locality === 'Mumbai')) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    return INITIAL_COMPLAINTS;
   });
 
   const [posts, setPosts] = useState<CommunityPost[]>(() => {
-    const saved = localStorage.getItem('voxly_posts');
-    return saved ? JSON.parse(saved) : INITIAL_POSTS;
+    const saved = localStorage.getItem('voxly_posts_v2') || localStorage.getItem('voxly_posts');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.some(p => p.locality === 'Delhi NCR' || p.locality === 'Mumbai')) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    return INITIAL_POSTS;
   });
 
   const [comments, setComments] = useState<PostComment[]>(() => {
@@ -158,8 +175,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [organisations, setOrganisations] = useState<Organisation[]>(() => {
-    const saved = localStorage.getItem('voxly_organisations');
-    return saved ? JSON.parse(saved) : INITIAL_ORGANISATIONS;
+    const saved = localStorage.getItem('voxly_organisations_v2') || localStorage.getItem('voxly_organisations');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.some(o => o.id === 'ngo-delhi')) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    return INITIAL_ORGANISATIONS;
   });
 
   const [proposals, setProposals] = useState<CollaborationProposal[]>(() => {
@@ -218,10 +243,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     localStorage.setItem('voxly_complaints', JSON.stringify(complaints));
+    localStorage.setItem('voxly_complaints_v2', JSON.stringify(complaints));
   }, [complaints]);
 
   useEffect(() => {
     localStorage.setItem('voxly_posts', JSON.stringify(posts));
+    localStorage.setItem('voxly_posts_v2', JSON.stringify(posts));
   }, [posts]);
 
   useEffect(() => {
@@ -230,6 +257,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     localStorage.setItem('voxly_organisations', JSON.stringify(organisations));
+    localStorage.setItem('voxly_organisations_v2', JSON.stringify(organisations));
   }, [organisations]);
 
   useEffect(() => {
@@ -302,18 +330,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const complaintId = `VX-2026-${randomSuffix}`;
     const timestamp = new Date().toISOString();
 
-    // Locality coordinate defaults if not provided
-    const localityCoords: Record<string, [number, number]> = {
-      'Tambaram': [12.9249, 80.1197],
-      'Chromepet': [12.9516, 80.1462],
-      'Pallavaram': [12.9675, 80.1491],
-      'Velachery': [12.9815, 80.2180],
-      'Guindy': [13.0067, 80.2026],
-      'Anna Nagar': [13.0850, 80.2101],
-      'Chennai': [13.0827, 80.2707],
-    };
-
-    const [defaultLat, defaultLng] = localityCoords[data.locality] || [12.9516, 80.1462];
+    // Locality coordinate defaults (pan-India) if not provided
+    const [defaultLat, defaultLng] = INDIA_CITY_COORDINATES[data.locality] || [20.5937, 78.9629];
 
     const newComplaint: Complaint = {
       id: complaintId,

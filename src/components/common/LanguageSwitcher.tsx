@@ -82,3 +82,4 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ compact = fa
     </div>
   );
 };
+

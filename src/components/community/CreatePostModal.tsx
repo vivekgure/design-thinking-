@@ -110,7 +110,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
                 onChange={(e) => setLocality(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#176B50]"
               >
-                {LOCALITIES.filter(l => l !== 'All Localities').map((loc) => (
+                {LOCALITIES.filter(l => l !== 'All Localities' && l !== 'All India').map((loc) => (
                   <option key={loc} value={loc}>
                     r/{loc}
                   </option>
