@@ -25,12 +25,18 @@ import {
   INITIAL_PROJECTS,
   INITIAL_NOTIFICATIONS
 } from '../data/mockData';
+import { Language, translations } from '../i18n/translations';
 
 interface AppContextType {
   currentUser: UserProfile;
   users: UserProfile[];
   switchRole: (role: UserRole) => void;
   setCurrentUser: (user: UserProfile) => void;
+
+  // Language & i18n
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: string, fallback?: string) => string;
   
   // Navigation
   activeTab: string;
@@ -180,6 +186,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = localStorage.getItem('voxly_followed_posts');
     return saved ? JSON.parse(saved) : ['post-1', 'post-4'];
   });
+
+  // Language state
+  const [language, setLanguageState] = useState<Language>(() => {
+    const saved = localStorage.getItem('voxly_lang') as Language;
+    return saved && ['en', 'ta', 'hi', 'te'].includes(saved) ? saved : 'en';
+  });
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('voxly_lang', lang);
+  };
+
+  const t = (key: string, fallback?: string): string => {
+    return translations[language]?.[key] ?? translations['en']?.[key] ?? fallback ?? key;
+  };
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -886,6 +907,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
+        language,
+        setLanguage,
+        t,
         currentUser,
         users,
         switchRole,

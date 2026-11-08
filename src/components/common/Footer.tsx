@@ -3,7 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { ShieldCheck, Heart, Award } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { setActiveTab } = useApp();
+  const { setActiveTab, t } = useApp();
 
   return (
     <footer className="bg-slate-900 text-slate-300 pt-12 pb-8 border-t border-slate-800 mt-16">
@@ -23,11 +23,11 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-sm text-slate-400 max-w-md leading-relaxed">
-              Every Voice Matters. Together, We Create Change. VOXLY is a community-driven civic engagement platform bridging citizens, government authorities, and welfare NGOs through open dialogue, transparent complaint tracking, and structured project execution.
+              {t('brand.tagline', 'Every Voice Matters. Together, We Create Change.')} {t('footer.disclaimer', 'VOXLY is an academic prototype for Design Thinking and Civic Methodology evaluation.')}
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-800/50 text-emerald-300 text-xs">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Academic Prototype: Functional Demonstration for Design Thinking Evaluation</span>
+              <span>{t('proto.badge', 'Academic Prototype')}: {t('proto.subtitle', 'Functional Demonstration for Design Thinking Evaluation')}</span>
             </div>
           </div>
 

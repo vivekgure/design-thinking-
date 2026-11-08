@@ -12,11 +12,11 @@ import {
   PlusCircle,
   CheckCheck,
   Search,
-  LogIn,
-  Sparkles
+  LogIn
 } from 'lucide-react';
 import { AuthModal } from './AuthModal';
 import { GlobalSearchModal } from './GlobalSearchModal';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Navbar: React.FC = () => {
   const {
@@ -28,7 +28,8 @@ export const Navbar: React.FC = () => {
     markAllNotificationsAsRead,
     unreadNotificationsCount,
     setSelectedComplaintId,
-    setSelectedPostId
+    setSelectedPostId,
+    t
   } = useApp();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -53,13 +54,13 @@ export const Navbar: React.FC = () => {
   const getDashboardLabel = () => {
     switch (currentUser.role) {
       case 'government':
-        return 'Gov Authority';
+        return t('nav.dashboard.gov', 'Gov Authority');
       case 'ngo':
-        return 'NGO Hub';
+        return t('nav.dashboard.ngo', 'NGO Hub');
       case 'admin':
-        return 'Admin Panel';
+        return t('nav.dashboard.admin', 'Admin Panel');
       default:
-        return 'My Dashboard';
+        return t('nav.dashboard.citizen', 'My Dashboard');
     }
   };
 
@@ -77,13 +78,13 @@ export const Navbar: React.FC = () => {
   };
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: null },
-    { id: 'community', label: 'Community Feed', icon: MessageSquare },
-    { id: 'report', label: 'Report Issue', icon: PlusCircle, highlight: true },
-    { id: 'explore', label: 'Explore & Map', icon: MapPin },
-    { id: 'organisations', label: 'Organisations', icon: Building2 },
+    { id: 'home', label: t('nav.home', 'Home'), icon: null },
+    { id: 'community', label: t('nav.community', 'Community Feed'), icon: MessageSquare },
+    { id: 'report', label: t('nav.report', 'Report Issue'), icon: PlusCircle, highlight: true },
+    { id: 'explore', label: t('nav.explore', 'Explore & Map'), icon: MapPin },
+    { id: 'organisations', label: t('nav.organisations', 'Organisations'), icon: Building2 },
     { id: getDashboardTabName(), label: getDashboardLabel(), icon: LayoutDashboard },
-    { id: 'about', label: 'About', icon: Info },
+    { id: 'about', label: t('nav.about', 'About'), icon: Info },
   ];
 
   const handleNotificationClick = (notif: typeof notifications[0]) => {
@@ -129,7 +130,7 @@ export const Navbar: React.FC = () => {
                     </span>
                   </span>
                   <p className="text-[10px] text-slate-500 font-medium tracking-tight hidden sm:block">
-                    Every Voice Matters. Together, We Create Change.
+                    {t('brand.tagline', 'Every Voice Matters. Together, We Create Change.')}
                   </p>
                 </div>
               </button>
@@ -173,8 +174,8 @@ export const Navbar: React.FC = () => {
               })}
             </nav>
 
-            {/* Right Controls: Search, Notifications & User Profile */}
-            <div className="flex items-center gap-2.5">
+            {/* Right Controls: Search, Language, Notifications & User Profile */}
+            <div className="flex items-center gap-2 sm:gap-2.5">
               {/* Omni Search Button */}
               <button
                 type="button"
@@ -183,11 +184,13 @@ export const Navbar: React.FC = () => {
                 title="Search complaints, discussions, NGOs (Ctrl+K)"
               >
                 <Search className="w-3.5 h-3.5 text-slate-400" />
-                <span className="hidden md:inline">Search...</span>
-                <kbd className="hidden md:inline font-mono text-[9px] bg-white px-1.5 py-0.2 rounded border border-slate-200 text-slate-400">
-                  Ctrl+K
-                </kbd>
+                <span className="hidden md:inline">{t('nav.search.hint', 'Search... (Ctrl+K)')}</span>
               </button>
+
+              {/* Language Switcher */}
+              <div className="hidden sm:block">
+                <LanguageSwitcher />
+              </div>
 
               {/* Notification Bell */}
               <div className="relative">
@@ -210,7 +213,7 @@ export const Navbar: React.FC = () => {
                   <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
                     <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-slate-800">Notifications</span>
+                        <span className="font-bold text-sm text-slate-800">{t('nav.notifications', 'Notifications')}</span>
                         <span className="text-xs bg-[#E8F5EE] text-[#176B50] font-semibold px-2 py-0.5 rounded-full">
                           {userNotifications.length}
                         </span>
@@ -222,7 +225,7 @@ export const Navbar: React.FC = () => {
                           className="text-xs text-[#176B50] hover:underline flex items-center gap-1 font-medium cursor-pointer"
                         >
                           <CheckCheck className="w-3.5 h-3.5" />
-                          Mark all read
+                          {t('nav.markAllRead', 'Mark all read')}
                         </button>
                       )}
                     </div>
@@ -230,7 +233,7 @@ export const Navbar: React.FC = () => {
                     <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
                       {userNotifications.length === 0 ? (
                         <div className="p-6 text-center text-slate-400 text-xs">
-                          No notifications for your profile yet.
+                          {t('nav.noNotifications', 'No notifications for your profile yet.')}
                         </div>
                       ) : (
                         userNotifications.map((notif) => (
@@ -310,19 +313,22 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile Navigation Drawer */}
           {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-slate-200 py-3 space-y-1">
-              {/* Mobile search */}
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsSearchModalOpen(true);
-                }}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 bg-slate-50 mb-2 cursor-pointer"
-              >
-                <Search className="w-4 h-4 text-slate-400" />
-                <span>Search Complaints & Discussions</span>
-              </button>
+            <div className="lg:hidden border-t border-slate-200 py-3 space-y-2">
+              {/* Mobile language & search */}
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <LanguageSwitcher />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsSearchModalOpen(true);
+                  }}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-xs font-medium text-slate-600 flex items-center gap-1.5"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                  <span>Search</span>
+                </button>
+              </div>
 
               {navItems.map((item) => (
                 <button
@@ -352,7 +358,7 @@ export const Navbar: React.FC = () => {
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-bold text-[#176B50] border-t border-slate-100 mt-2 cursor-pointer"
               >
                 <LogIn className="w-4 h-4" />
-                <span>Switch Profile / Sign In</span>
+                <span>{t('nav.signIn', 'Switch Profile / Sign In')}</span>
               </button>
             </div>
           )}

@@ -29,7 +29,8 @@ export const CommunityFeed: React.FC = () => {
     setActiveTab,
     selectedPostId,
     setSelectedPostId,
-    setSelectedComplaintId
+    setSelectedComplaintId,
+    t
   } = useApp();
 
   const [activeFilter, setActiveFilter] = useState<'latest' | 'trending' | 'most_supported' | 'unresolved'>('latest');
@@ -277,7 +278,7 @@ export const CommunityFeed: React.FC = () => {
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" />
-                <span>Latest</span>
+                <span>{t('feed.filter.latest', 'Latest')}</span>
               </button>
 
               <button
@@ -290,7 +291,7 @@ export const CommunityFeed: React.FC = () => {
                 }`}
               >
                 <Flame className="w-3.5 h-3.5" />
-                <span>Trending</span>
+                <span>{t('feed.filter.trending', 'Trending')}</span>
               </button>
 
               <button
@@ -303,7 +304,7 @@ export const CommunityFeed: React.FC = () => {
                 }`}
               >
                 <ThumbsUp className="w-3.5 h-3.5" />
-                <span>Most Supported</span>
+                <span>{t('feed.filter.mostSupported', 'Most Supported')}</span>
               </button>
 
               <button
@@ -316,7 +317,7 @@ export const CommunityFeed: React.FC = () => {
                 }`}
               >
                 <AlertTriangle className="w-3.5 h-3.5" />
-                <span>Unresolved Issues</span>
+                <span>{t('feed.filter.unresolved', 'Unresolved Issues')}</span>
               </button>
             </div>
           </div>

@@ -59,7 +59,8 @@ export const ReportIssue: React.FC = () => {
     supportComplaint,
     currentUser,
     setSelectedComplaintId,
-    setActiveTab
+    setActiveTab,
+    t
   } = useApp();
 
   const [title, setTitle] = useState('');
@@ -155,10 +156,10 @@ export const ReportIssue: React.FC = () => {
           <span>Official Civic Grievance Registration</span>
         </div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-          Report an Issue in Your Neighborhood
+          {t('report.heading', 'Report an Issue in Your Neighborhood')}
         </h1>
         <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
-          Submit local environmental, infrastructure, or public safety issues. Public complaints automatically create community discussion posts where neighbors can rally and back your issue.
+          {t('report.subheading', 'Submit local environmental, infrastructure, or public safety issues. Public complaints automatically create community discussion posts where neighbors can rally and back your issue.')}
         </p>
       </div>
 
@@ -175,7 +176,7 @@ export const ReportIssue: React.FC = () => {
           <div className="flex items-center gap-2 text-amber-900">
             <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
             <h3 className="font-bold text-sm">
-              An issue similar to yours has already been reported in {locality}!
+              {t('report.dupWarning', 'An issue similar to yours has already been reported in this locality!')}
             </h3>
           </div>
           <p className="text-xs text-amber-800 leading-relaxed">
@@ -246,7 +247,7 @@ export const ReportIssue: React.FC = () => {
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Complaint Title *
+              {t('report.titleLabel', 'Complaint Title *')}
             </label>
             <input
               type="text"
@@ -260,7 +261,7 @@ export const ReportIssue: React.FC = () => {
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Detailed Description *
+              {t('report.descLabel', 'Detailed Description *')}
             </label>
             <textarea
               rows={4}
@@ -275,7 +276,7 @@ export const ReportIssue: React.FC = () => {
           {/* Category Picker */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Issue Category *
+              {t('report.catLabel', 'Issue Category *')}
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -325,7 +326,7 @@ export const ReportIssue: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Locality / Sub-Municipality *
+                {t('report.localityLabel', 'Locality / Sub-Municipality *')}
               </label>
               <select
                 value={locality}
@@ -342,7 +343,7 @@ export const ReportIssue: React.FC = () => {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Date of Occurrence *
+                {t('report.dateLabel', 'Date of Occurrence *')}
               </label>
               <input
                 type="date"
@@ -356,7 +357,7 @@ export const ReportIssue: React.FC = () => {
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Specific Street Address & Landmark *
+              {t('report.addressLabel', 'Specific Street Address & Landmark *')}
             </label>
             <input
               type="text"
@@ -370,7 +371,7 @@ export const ReportIssue: React.FC = () => {
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Suggested Department
+              {t('report.deptLabel', 'Suggested Department')}
             </label>
             <select
               value={department}
@@ -449,7 +450,7 @@ export const ReportIssue: React.FC = () => {
           <div>
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
               <span className="w-6 h-6 rounded-md bg-[#E8F5EE] text-[#176B50] flex items-center justify-center text-xs font-bold">4</span>
-              Complaint Visibility Level
+              {t('report.visTitle', 'Complaint Visibility Level')}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
               Select how your report is distributed. Private complaints are strictly protected and never shared with other citizens or NGOs.
@@ -469,7 +470,7 @@ export const ReportIssue: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 font-bold text-sm text-slate-900">
                     <Globe className="w-4 h-4 text-[#176B50]" />
-                    <span>Public</span>
+                    <span>{t('report.visPublic', 'Public')}</span>
                   </div>
                   <input
                     type="radio"
@@ -481,7 +482,7 @@ export const ReportIssue: React.FC = () => {
                   />
                 </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed">
-                  Visible to everyone. Automatically creates a community feed post under your username. Neighbors can vote, comment, and collaborate.
+                  {t('report.visPublicDesc', 'Visible to everyone. Automatically creates a community feed post under your username. Neighbors can vote, comment, and collaborate.')}
                 </p>
               </div>
               <span className="text-[10px] font-semibold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-200 mt-3 inline-block self-start">
@@ -501,7 +502,7 @@ export const ReportIssue: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 font-bold text-sm text-slate-900">
                     <EyeOff className="w-4 h-4 text-amber-600" />
-                    <span>Anonymous Public</span>
+                    <span>{t('report.visAnon', 'Anonymous Public')}</span>
                   </div>
                   <input
                     type="radio"
@@ -513,7 +514,7 @@ export const ReportIssue: React.FC = () => {
                   />
                 </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed">
-                  Visible to everyone in community feed, but your name is hidden. Neighbors can discuss and vote. Only authorized officials see your identity for verification.
+                  {t('report.visAnonDesc', 'Visible to everyone in community feed, but your name is hidden. Neighbors can discuss and vote. Only authorized officials see your identity for verification.')}
                 </p>
               </div>
               <span className="text-[10px] font-semibold text-amber-700 bg-white px-2 py-0.5 rounded border border-amber-200 mt-3 inline-block self-start">
@@ -533,7 +534,7 @@ export const ReportIssue: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 font-bold text-sm text-slate-900">
                     <Lock className="w-4 h-4 text-purple-600" />
-                    <span>Private</span>
+                    <span>{t('report.visPrivate', 'Private')}</span>
                   </div>
                   <input
                     type="radio"
@@ -545,7 +546,7 @@ export const ReportIssue: React.FC = () => {
                   />
                 </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed">
-                  Strictly confidential. Visible ONLY to you and verified municipal officials. Does NOT appear in community feeds or to NGOs.
+                  {t('report.visPrivateDesc', 'Strictly confidential. Visible ONLY to you and verified municipal officials. Does NOT appear in community feeds or to NGOs.')}
                 </p>
               </div>
               <span className="text-[10px] font-semibold text-purple-700 bg-white px-2 py-0.5 rounded border border-purple-200 mt-3 inline-block self-start">
@@ -565,7 +566,7 @@ export const ReportIssue: React.FC = () => {
             type="submit"
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#176B50] hover:bg-[#11533e] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>Register Official Complaint</span>
+            <span>{t('report.submitBtn', 'Register Official Complaint')}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

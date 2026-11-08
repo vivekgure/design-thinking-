@@ -38,7 +38,8 @@ export const ComplaintTracker: React.FC = () => {
     supportComplaint,
     projects,
     setActiveTab,
-    setSelectedPostId
+    setSelectedPostId,
+    t
   } = useApp();
 
   const [searchId, setSearchId] = useState('');
@@ -113,10 +114,10 @@ export const ComplaintTracker: React.FC = () => {
               <span>Public Civic Audit & Tracking</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
-              Civic Complaint Status Tracker
+              {t('track.title', 'Civic Complaint Status Tracker')}
             </h1>
             <p className="text-xs text-slate-500 mt-1">
-              Follow real-time municipal inspection, department dispatch, and NGO project resolution.
+              {t('track.subtitle', 'Follow real-time municipal inspection, department dispatch, and NGO project resolution.')}
             </p>
           </div>
 
@@ -134,7 +135,7 @@ export const ComplaintTracker: React.FC = () => {
               className="px-4 py-2 rounded-xl bg-[#176B50] hover:bg-[#11533e] text-white text-xs font-bold transition-colors flex items-center gap-1 shrink-0 cursor-pointer"
             >
               <Search className="w-3.5 h-3.5" />
-              <span>Lookup</span>
+              <span>{t('track.lookup', 'Lookup')}</span>
             </button>
           </form>
         </div>

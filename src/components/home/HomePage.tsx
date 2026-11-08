@@ -24,7 +24,8 @@ export const HomePage: React.FC = () => {
     organisations,
     projects,
     setSelectedPostId,
-    setSelectedComplaintId
+    setSelectedComplaintId,
+    t
   } = useApp();
 
   // Compute live stats from data
@@ -55,17 +56,17 @@ export const HomePage: React.FC = () => {
             <div className="lg:col-span-7 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EE] border border-[#c8e7d7] text-[#176B50] text-xs font-semibold shadow-xs">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Next-Gen Civic Engagement & Problem Solving</span>
+                <span>{t('hero.badge', 'Next-Gen Civic Engagement & Problem Solving')}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#202B27] tracking-tight leading-[1.12]">
-                Your Community. <br />
-                <span className="text-[#176B50]">Your Voice.</span> <br />
-                <span className="text-[#3478C5]">Your Change.</span>
+                {t('hero.title1', 'Your Community.')} <br />
+                <span className="text-[#176B50]">{t('hero.title2', 'Your Voice.')}</span> <br />
+                <span className="text-[#3478C5]">{t('hero.title3', 'Your Change.')}</span>
               </h1>
 
               <p className="text-lg text-slate-600 max-w-xl leading-relaxed">
-                Connect with your community, report local problems, share solutions, and work together with authorities and organisations to create meaningful change.
+                {t('hero.desc', 'Connect with your community, report local problems, share solutions, and work together with authorities and organisations to create meaningful change.')}
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -75,7 +76,7 @@ export const HomePage: React.FC = () => {
                   className="px-6 py-3.5 rounded-xl bg-[#176B50] hover:bg-[#11533e] text-white font-bold text-base shadow-lg shadow-[#176B50]/25 hover:shadow-xl transition-all flex items-center gap-2 cursor-pointer group"
                 >
                   <MessageSquare className="w-5 h-5" />
-                  <span>Explore Community</span>
+                  <span>{t('hero.exploreBtn', 'Explore Community')}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
 
@@ -85,7 +86,7 @@ export const HomePage: React.FC = () => {
                   className="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-[#176B50] font-bold text-base border-2 border-[#176B50] shadow-sm hover:shadow transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <AlertCircle className="w-5 h-5 text-[#176B50]" />
-                  <span>Report an Issue</span>
+                  <span>{t('hero.reportBtn', 'Report an Issue')}</span>
                 </button>
               </div>
 
@@ -93,15 +94,15 @@ export const HomePage: React.FC = () => {
               <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200/80 text-xs text-slate-600 font-medium">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#176B50]" />
-                  <span>Reddit-Style Feeds</span>
+                  <span>{t('hero.feat1', 'Reddit-Style Feeds')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#176B50]" />
-                  <span>Confidential Reporting</span>
+                  <span>{t('hero.feat2', 'Confidential Reporting')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#176B50]" />
-                  <span>NGO Co-Execution</span>
+                  <span>{t('hero.feat3', 'NGO Co-Execution')}</span>
                 </div>
               </div>
             </div>
@@ -177,10 +178,10 @@ export const HomePage: React.FC = () => {
             <div>
               <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-[#176B50]" />
-                Platform Impact Overview
+                {t('stats.title', 'Platform Impact Overview')}
               </h2>
               <p className="text-xs text-slate-500">
-                Demonstration platform statistics (simulated data for university project evaluation).
+                {t('stats.subtitle', 'Demonstration platform statistics (simulated data for university project evaluation).')}
               </p>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-600">
@@ -194,7 +195,7 @@ export const HomePage: React.FC = () => {
                 {totalReported}
               </span>
               <span className="text-xs font-medium text-slate-600 mt-1 block">
-                Total Issues Reported
+                {t('stats.totalReported', 'Total Issues Reported')}
               </span>
             </div>
 
@@ -203,7 +204,7 @@ export const HomePage: React.FC = () => {
                 {issuesResolved}
               </span>
               <span className="text-xs font-medium text-slate-600 mt-1 block">
-                Issues Resolved
+                {t('stats.resolved', 'Issues Resolved')}
               </span>
             </div>
 
@@ -212,7 +213,7 @@ export const HomePage: React.FC = () => {
                 {activeCommunitiesCount}
               </span>
               <span className="text-xs font-medium text-slate-600 mt-1 block">
-                Active Localities
+                {t('stats.activeCommunities', 'Active Localities')}
               </span>
             </div>
 
@@ -221,7 +222,7 @@ export const HomePage: React.FC = () => {
                 {verifiedOrgsCount}
               </span>
               <span className="text-xs font-medium text-slate-600 mt-1 block">
-                Verified NGOs
+                {t('stats.verifiedOrgs', 'Verified NGOs')}
               </span>
             </div>
 
@@ -230,7 +231,7 @@ export const HomePage: React.FC = () => {
                 {ongoingProjectsCount}
               </span>
               <span className="text-xs font-medium text-slate-600 mt-1 block">
-                Collaborative Projects
+                {t('stats.ongoingProjects', 'Collaborative Projects')}
               </span>
             </div>
           </div>
@@ -241,13 +242,13 @@ export const HomePage: React.FC = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold uppercase tracking-wider text-[#176B50] bg-[#E8F5EE] px-3 py-1 rounded-full">
-            Our 4-Step Methodology
+            {t('how.badge', 'Our 4-Step Methodology')}
           </span>
           <h2 className="text-3xl font-extrabold text-slate-900 mt-3">
-            How VOXLY Drives Real Solutions
+            {t('how.title', 'How VOXLY Drives Real Solutions')}
           </h2>
           <p className="text-sm text-slate-600 mt-2">
-            A continuous civic pipeline transforming individual frustrations into backed community solutions and verified outcomes.
+            {t('how.subtitle', 'A continuous civic pipeline transforming individual frustrations into backed community solutions and verified outcomes.')}
           </p>
         </div>
 
@@ -257,9 +258,11 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-[#E8F5EE] text-[#176B50] flex items-center justify-center font-black text-lg mb-4 group-hover:scale-110 transition-transform">
               1
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">1. Report a Problem</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">
+              {t('how.step1.title', '1. Report a Problem')}
+            </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Citizens submit environmental or social issues with photographs, location pins, and choose between Public, Anonymous, or Private visibility.
+              {t('how.step1.desc', 'Citizens submit environmental or social issues with photographs, location pins, and choose between Public, Anonymous, or Private visibility.')}
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#176B50]">
               Unique Complaint ID Tracking
@@ -271,9 +274,11 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-[#E8F5EE] text-[#176B50] flex items-center justify-center font-black text-lg mb-4 group-hover:scale-110 transition-transform">
               2
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">2. Discuss & Rally</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">
+              {t('how.step2.title', '2. Discuss & Rally')}
+            </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Public issues automatically generate Reddit-style community threads where neighbors comment, share evidence, and upvote to elevate urgency.
+              {t('how.step2.desc', 'Public issues automatically generate Reddit-style community threads where neighbors comment, share evidence, and upvote to elevate urgency.')}
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#176B50]">
               Support Existing Complaints
@@ -285,9 +290,11 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-[#E8F5EE] text-[#176B50] flex items-center justify-center font-black text-lg mb-4 group-hover:scale-110 transition-transform">
               3
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">3. Collaborate</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">
+              {t('how.step3.title', '3. Collaborate')}
+            </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Verified NGOs discover community-backed grievances and submit structured collaboration proposals with solutions, budgets, and volunteer plans.
+              {t('how.step3.desc', 'Verified NGOs discover community-backed grievances and submit structured collaboration proposals with solutions, budgets, and volunteer plans.')}
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#176B50]">
               Government Approval & Funding
@@ -299,9 +306,11 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-[#E8F5EE] text-[#176B50] flex items-center justify-center font-black text-lg mb-4 group-hover:scale-110 transition-transform">
               4
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">4. Track & Resolve</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">
+              {t('how.step4.title', '4. Track & Resolve')}
+            </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Transparent milestone updates, photographic resolution evidence, and final verification ensure real results with citizen reopening rights.
+              {t('how.step4.desc', 'Transparent milestone updates, photographic resolution evidence, and final verification ensure real results with citizen reopening rights.')}
             </p>
             <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-[#176B50]">
               Citizen Feedback Loop

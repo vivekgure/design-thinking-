@@ -28,7 +28,8 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenDetail }) => {
     supportComplaint,
     currentUser,
     setSelectedComplaintId,
-    setActiveTab
+    setActiveTab,
+    t
   } = useApp();
 
   const [copied, setCopied] = useState(false);
@@ -151,7 +152,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenDetail }) => {
                 {linkedComplaint.supportCount} Citizen Backers
               </span>
               <span className="text-[11px] text-[#176B50] font-semibold flex items-center gap-0.5 underline">
-                Track Timeline <ExternalLink className="w-3 h-3" />
+                {t('feed.trackTimeline', 'Track Timeline')} <ExternalLink className="w-3 h-3" />
               </span>
             </div>
           </div>
@@ -219,7 +220,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenDetail }) => {
               className="flex items-center gap-1.5 font-semibold text-slate-600 hover:text-[#176B50]"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>{post.commentCount} Comments</span>
+              <span>{post.commentCount} {t('feed.comments', 'Comments')}</span>
             </button>
 
             {linkedComplaint && (
@@ -236,7 +237,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenDetail }) => {
                 }`}
               >
                 <HeartHandshake className="w-3.5 h-3.5" />
-                <span>{isSupported ? 'Supported' : 'Support Issue'}</span>
+                <span>{isSupported ? t('feed.supported', 'Supported ✓') : t('feed.supportIssue', 'Support Issue')}</span>
               </button>
             )}
           </div>
