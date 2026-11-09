@@ -13,7 +13,8 @@ import {
   CollaborationProposal,
   ProposalStatus,
   NgoProject,
-  AppNotification
+  AppNotification,
+  ComplaintReferral
 } from '../types';
 import {
   INITIAL_USERS,
@@ -27,6 +28,7 @@ import {
   INDIA_CITY_COORDINATES
 } from '../data/mockData';
 import { Language, translations } from '../i18n/translations';
+import { api } from '../services/api';
 
 interface AppContextType {
   currentUser: UserProfile;
@@ -72,6 +74,16 @@ interface AppContextType {
   ) => void;
   reopenComplaint: (complaintId: string, reason: string) => void;
   getComplaintById: (id: string) => Complaint | undefined;
+
+  // Inter-Agency Referrals
+  referrals: ComplaintReferral[];
+  createReferral: (data: {
+    complaintId: string;
+    targetDepartment: string;
+    targetAgency?: string;
+    priority?: 'Urgent' | 'High' | 'Normal';
+    actionMandate?: string;
+  }) => ComplaintReferral;
 
   // Community Posts
   posts: CommunityPost[];
@@ -212,6 +224,67 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : ['post-1', 'post-4'];
   });
 
+  // Inter-Agency Referrals state
+  const [referrals, setReferrals] = useState<ComplaintReferral[]>(() => {
+    const saved = localStorage.getItem('voxly_referrals_v1');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch {}
+    }
+    return [
+      {
+        id: 'REF-2026-8901',
+        complaintId: 'VX-2026-1042',
+        complaintTitle: 'Severe Garbage Accumulation & Open Dumping Near Tambaram Railway Station East',
+        complainantName: 'Priya Sundaram',
+        locality: 'Tambaram',
+        referredBy: 'Dr. R. Arumugam, IAS',
+        referredByRole: 'government',
+        targetDepartment: 'GCC Solid Waste Management',
+        targetAgency: 'Green Earth Chennai NGO',
+        priority: 'Urgent',
+        actionMandate: 'Immediate mechanized waste clearance, installation of 4 compactor bins, and daily monitoring with NGO partnership.',
+        status: 'Action Initiated',
+        createdAt: '2026-10-25T11:00:00Z',
+        officialDocketNumber: 'DOK-GCC-2026-4402'
+      },
+      {
+        id: 'REF-2026-8902',
+        complaintId: 'VX-2026-2101',
+        complaintTitle: 'Severe Particulate Smog & Unregulated Open Plastic Burning near Anand Vihar ISBT',
+        complainantName: 'Amit Sharma',
+        locality: 'Delhi NCR',
+        referredBy: 'Zonal Municipal Directorate',
+        referredByRole: 'admin',
+        targetDepartment: 'State Pollution Control Board',
+        targetAgency: 'Clean Air & Yamuna Taskforce',
+        priority: 'Urgent',
+        actionMandate: 'Deploy water mist cannons, enforce night patrolling for illegal burning, and inspect emission filters on interstate buses.',
+        status: 'Action Initiated',
+        createdAt: '2026-10-29T09:30:00Z',
+        officialDocketNumber: 'DOK-DPCC-2026-9011'
+      },
+      {
+        id: 'REF-2026-8903',
+        complaintId: 'VX-2026-2301',
+        complaintTitle: 'Toxic Chemical Foam Eruption & Weed Choking at Bellandur Lake Outflow',
+        complainantName: 'Rahul Hegde',
+        locality: 'Bengaluru',
+        referredBy: 'Municipal Commissioner Office',
+        referredByRole: 'government',
+        targetDepartment: 'State Pollution Control Board',
+        targetAgency: 'Bengaluru Lakes & Civic Forum',
+        priority: 'High',
+        actionMandate: 'Run bio-aeration pumps, clear floating water hyacinth, and seal unauthorized industrial chemical drainage pipes.',
+        status: 'Pending',
+        createdAt: '2026-10-27T14:15:00Z',
+        officialDocketNumber: 'DOK-KSPCB-2026-3190'
+      }
+    ];
+  });
+
   // Language state
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('voxly_lang') as Language;
@@ -279,6 +352,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem('voxly_followed_posts', JSON.stringify(followedPostIds));
   }, [followedPostIds]);
+
+  useEffect(() => {
+    localStorage.setItem('voxly_referrals_v1', JSON.stringify(referrals));
+  }, [referrals]);
+
+  // Synchronize complaints & referrals with the backend API on startup
+  useEffect(() => {
+    api.getComplaints().then((serverComplaints) => {
+      if (Array.isArray(serverComplaints) && serverComplaints.length > 0) {
+        setComplaints(prev => {
+          const map = new Map<string, Complaint>();
+          serverComplaints.forEach(c => map.set(c.id, c));
+          prev.forEach(c => {
+            if (!map.has(c.id)) map.set(c.id, c);
+          });
+          return Array.from(map.values());
+        });
+      }
+    }).catch(() => {
+      // offline / local fallback mode
+    });
+
+    api.getReferrals().then((serverReferrals) => {
+      if (Array.isArray(serverReferrals) && serverReferrals.length > 0) {
+        setReferrals(prev => {
+          const map = new Map<string, ComplaintReferral>();
+          serverReferrals.forEach(r => map.set(r.id, r));
+          prev.forEach(r => {
+            if (!map.has(r.id)) map.set(r.id, r);
+          });
+          return Array.from(map.values());
+        });
+      }
+    }).catch(() => {
+      // offline / local fallback mode
+    });
+  }, []);
 
   // Switch Role
   const switchRole = (role: UserRole) => {
@@ -389,6 +499,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setComplaints(prev => [newComplaint, ...prev]);
 
+    // Send to backend API asynchronously (persists to server database / Vercel serverless)
+    api.createComplaint({
+      title: newComplaint.title,
+      description: newComplaint.description,
+      category: newComplaint.category,
+      locality: newComplaint.locality,
+      address: newComplaint.address,
+      latitude: newComplaint.latitude,
+      longitude: newComplaint.longitude,
+      visibility: newComplaint.visibility,
+      photos: newComplaint.photos,
+      suggestedDepartment: newComplaint.assignedDepartment,
+      userId: currentUser.id,
+      userDisplayName: newComplaint.userDisplayName,
+      userAvatar: newComplaint.userAvatar
+    }).catch(err => {
+      console.warn('[Backend Sync] Fallback to local persistence:', err.message);
+    });
+
     // Notify user of complaint registration
     addNotification({
       userId: currentUser.id,
@@ -400,6 +529,73 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     fireConfetti();
     return newComplaint;
+  };
+
+  // 1.1 Create and Inter-Agency Refer Complaint
+  const createReferral = (data: {
+    complaintId: string;
+    targetDepartment: string;
+    targetAgency?: string;
+    priority?: 'Urgent' | 'High' | 'Normal';
+    actionMandate?: string;
+  }): ComplaintReferral => {
+    const complaint = complaints.find(c => c.id === data.complaintId);
+    const refNum = Math.floor(1000 + Math.random() * 9000);
+    const referralId = `REF-2026-${refNum}`;
+    const prefix = data.targetDepartment.slice(0, 4).toUpperCase().replace(/[^A-Z]/g, '') || 'CIV';
+    const docketNumber = `DOK-${prefix}-2026-${refNum}`;
+    const timestamp = new Date().toISOString();
+
+    const newReferral: ComplaintReferral = {
+      id: referralId,
+      complaintId: data.complaintId,
+      complaintTitle: complaint ? complaint.title : 'Referred Civic Grievance',
+      complainantName: complaint ? complaint.userDisplayName : 'Verified Citizen',
+      locality: complaint ? complaint.locality : 'India',
+      referredBy: currentUser.name,
+      referredByRole: currentUser.role,
+      targetDepartment: data.targetDepartment,
+      targetAgency: data.targetAgency,
+      priority: data.priority || 'High',
+      actionMandate: data.actionMandate || 'Mandatory inspection, corrective action, and verification report ordered.',
+      status: 'Action Initiated',
+      createdAt: timestamp,
+      officialDocketNumber: docketNumber
+    };
+
+    setReferrals(prev => [newReferral, ...prev]);
+
+    // Update parent complaint
+    updateComplaintStatus(
+      data.complaintId,
+      complaint?.status === 'Submitted' ? 'Assigned' : (complaint?.status || 'Assigned'),
+      `Inter-Agency Referral under Docket ${docketNumber} dispatched to ${data.targetDepartment}. Action Mandate: ${newReferral.actionMandate}`,
+      data.targetDepartment as DepartmentName
+    );
+
+    // Sync to backend API
+    api.createReferral({
+      complaintId: data.complaintId,
+      referredBy: currentUser.name,
+      referredByRole: currentUser.role,
+      targetDepartment: data.targetDepartment,
+      targetAgency: data.targetAgency,
+      priority: data.priority,
+      actionMandate: data.actionMandate
+    }).catch(err => {
+      console.warn('[Backend Sync] Referral registered locally:', err.message);
+    });
+
+    addNotification({
+      userId: currentUser.id,
+      title: `Referral Docket Issued (${docketNumber})`,
+      message: `Complaint ${data.complaintId} was referred to ${data.targetDepartment} with ${newReferral.priority} priority.`,
+      type: 'official_response',
+      linkTarget: { type: 'complaint', id: data.complaintId }
+    });
+
+    fireConfetti();
+    return newReferral;
   };
 
   // Support complaint (community backing)
@@ -423,6 +619,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return c;
     }));
+
+    // Sync to backend API
+    api.supportComplaint(complaintId, currentUser.id).catch(err => {
+      console.warn('[Backend Sync] Support update saved locally:', err.message);
+    });
   };
 
   // Update complaint status (Government Official / Admin)
@@ -472,6 +673,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         linkTarget: { type: 'complaint', id: complaintId }
       });
     }
+
+    // Sync to backend API
+    api.updateComplaint(complaintId, {
+      status,
+      officialRemarks: remarks,
+      assignedDepartment: department,
+      assignedOfficer: officer,
+      resolutionEvidencePhotos: resolutionPhotos
+    }).catch(err => {
+      console.warn('[Backend Sync] Status update registered locally:', err.message);
+    });
   };
 
   // Reopen complaint (Citizen)
@@ -944,6 +1156,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateComplaintStatus,
         reopenComplaint,
         getComplaintById,
+        referrals,
+        createReferral,
         posts,
         createPost,
         votePost,

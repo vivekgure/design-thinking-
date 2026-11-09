@@ -15,7 +15,8 @@ import {
   Image as ImageIcon,
   MessageSquare,
   Sparkles,
-  MapPin
+  MapPin,
+  Send
 } from 'lucide-react';
 
 const STATUS_STEPS: ComplaintStatus[] = [
@@ -302,6 +303,18 @@ export const ComplaintTracker: React.FC = () => {
                       <span>Open Community Discussion</span>
                     </button>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedComplaintId(activeComplaint.id);
+                      setActiveTab('registry');
+                    }}
+                    className="w-full py-2 px-3 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    <Send className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Refer This Complaint (Docket / Audit)</span>
+                  </button>
 
                   {activeComplaint.status === 'Resolved' && isCitizenOwner && (
                     <button

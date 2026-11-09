@@ -12,7 +12,8 @@ import {
   PlusCircle,
   CheckCheck,
   Search,
-  LogIn
+  LogIn,
+  FileText
 } from 'lucide-react';
 import { AuthModal } from './AuthModal';
 import { GlobalSearchModal } from './GlobalSearchModal';
@@ -81,6 +82,7 @@ export const Navbar: React.FC = () => {
     { id: 'home', label: t('nav.home', 'Home'), icon: null },
     { id: 'community', label: t('nav.community', 'Community Feed'), icon: MessageSquare },
     { id: 'report', label: t('nav.report', 'Report Issue'), icon: PlusCircle, highlight: true },
+    { id: 'registry', label: t('nav.registry', 'Referrals & Registry'), icon: FileText },
     { id: 'explore', label: t('nav.explore', 'Explore & Map'), icon: MapPin },
     { id: 'organisations', label: t('nav.organisations', 'Organisations'), icon: Building2 },
     { id: getDashboardTabName(), label: getDashboardLabel(), icon: LayoutDashboard },

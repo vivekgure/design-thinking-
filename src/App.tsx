@@ -9,6 +9,7 @@ import { HomePage } from './components/home/HomePage';
 import { CommunityFeed } from './components/community/CommunityFeed';
 import { ReportIssue } from './components/complaints/ReportIssue';
 import { ComplaintTracker } from './components/complaints/ComplaintTracker';
+import { ComplaintRegistry } from './components/complaints/ComplaintRegistry';
 import { ExploreMap } from './components/explore/ExploreMap';
 import { OrganisationsPage } from './components/organisations/OrganisationsPage';
 import { CitizenDashboard } from './components/dashboard/CitizenDashboard';
@@ -30,6 +31,8 @@ const MainContent: React.FC = () => {
         return <ReportIssue />;
       case 'track':
         return <ComplaintTracker />;
+      case 'registry':
+        return <ComplaintRegistry />;
       case 'explore':
         return <ExploreMap />;
       case 'organisations':

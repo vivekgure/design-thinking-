@@ -1,0 +1,257 @@
+{
+  "complaints": [
+    {
+      "id": "VX-2026-1042",
+      "title": "Severe Garbage Accumulation & Open Dumping Near Tambaram Railway Station East",
+      "description": "Massive overflow of non-segregated household and commercial waste piling onto the pedestrian pathway outside Tambaram East railway station. Stagnant runoff is causing severe foul odors and attracting stray animals. Pedestrians are forced to walk onto the busy vehicular road.",
+      "category": "Garbage Accumulation",
+      "locality": "Tambaram",
+      "address": "GST Road Exit, Tambaram East Railway Station, Chennai 600059",
+      "latitude": 12.9249,
+      "longitude": 80.1197,
+      "visibility": "public",
+      "status": "In Progress",
+      "createdAt": "2026-10-24T09:30:00Z",
+      "updatedAt": "2026-11-04T14:15:00Z",
+      "userId": "user-citizen-1",
+      "userDisplayName": "Priya Sundaram",
+      "userAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1605600659908-0ef719419d41?w=800&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "GCC Solid Waste Management",
+      "assignedOfficer": "Thiru M. Balaji (AE, Zone XIV)",
+      "officialRemarks": "Site inspection conducted on Oct 26. Initial mechanized clearing executed. Partnered with Green Earth Chennai NGO under civic collaboration scheme for sustainable bin infrastructure and daily monitoring.",
+      "supportCount": 48,
+      "supportedByUserIds": [
+        "user-citizen-2",
+        "user-ngo-1",
+        "user-admin-1"
+      ],
+      "linkedPostId": "post-1",
+      "linkedProjectId": "project-1"
+    },
+    {
+      "id": "VX-2026-1088",
+      "title": "Overflowing Sewage & Broken Drainage Pipeline on Chromepet Station Road",
+      "description": "Underground sewerage line has fractured near the busy market junction on Chromepet Station Road. Dark sewage is flooding into local storefronts and creating a critical health hazard with mosquito breeding.",
+      "category": "Drainage Problems",
+      "locality": "Chromepet",
+      "address": "Station Road Junction, near Chromepet Bus Stand, Chennai 600044",
+      "latitude": 12.9516,
+      "longitude": 80.1462,
+      "visibility": "public",
+      "status": "Assigned",
+      "createdAt": "2026-11-01T11:20:00Z",
+      "updatedAt": "2026-11-05T16:00:00Z",
+      "userId": "user-citizen-2",
+      "userDisplayName": "Karthik Raja",
+      "userAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1541888946425-d0fbb186156f?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "Chennai Metro Water & Sewerage (CMWSSB)",
+      "assignedOfficer": "Er. S. Venkatraman (Area Engineer)",
+      "officialRemarks": "Work order #CMWSSB-2026-89 issued. High-pressure jetting machine dispatched. Trench work scheduled for overnight maintenance to minimize traffic bottleneck.",
+      "supportCount": 34,
+      "supportedByUserIds": [
+        "user-citizen-1"
+      ],
+      "linkedPostId": "post-2"
+    },
+    {
+      "id": "VX-2026-2101",
+      "title": "Severe Particulate Smog & Unregulated Open Plastic Burning near Anand Vihar ISBT",
+      "description": "Hazardous air quality spikes (AQI 420+) caused by commercial open waste incineration and heavy interstate bus idling without emission filtration. Residents experiencing severe respiratory distress.",
+      "category": "Air Pollution",
+      "locality": "Delhi NCR",
+      "address": "Road No. 56, Anand Vihar ISBT Terminal Gate 3, East Delhi 110092",
+      "latitude": 28.6469,
+      "longitude": 77.316,
+      "visibility": "public",
+      "status": "In Progress",
+      "createdAt": "2026-10-28T07:15:00Z",
+      "updatedAt": "2026-11-06T15:20:00Z",
+      "userId": "user-citizen-delhi",
+      "userDisplayName": "Amit Sharma",
+      "userAvatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1579245486065-224683c34a2e?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "Tamil Nadu Pollution Control Board (TNPCB)",
+      "assignedOfficer": "DPCC Environmental Enforcement Inspector S. Verma",
+      "officialRemarks": "Anti-smog guns deployed on Road 56. Night thermal patrolling initiated to penalize illegal dumping.",
+      "supportCount": 128,
+      "supportedByUserIds": [
+        "user-citizen-delhi",
+        "user-admin-1"
+      ],
+      "linkedPostId": "post-delhi-1"
+    },
+    {
+      "id": "VX-2026-2201",
+      "title": "Plastic Debris Bottleneck & Stagnant Stormwater Overflow on Mithi River BKC Connector",
+      "description": "Massive single-use plastic accumulations obstructing the flow of Mithi River beneath the BKC bridge. High tide causes toxic black runoff to back up into public cycling tracks and transit lanes.",
+      "category": "Drainage Problems",
+      "locality": "Mumbai",
+      "address": "Mithi River Bridge, Near BKC Connector, Bandra Kurla Complex, Mumbai 400051",
+      "latitude": 19.0657,
+      "longitude": 72.8687,
+      "visibility": "public",
+      "status": "In Progress",
+      "createdAt": "2026-10-30T14:45:00Z",
+      "updatedAt": "2026-11-05T18:00:00Z",
+      "userId": "user-citizen-mumbai",
+      "userDisplayName": "Sneha Patil",
+      "userAvatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1605600659908-0ef719419d41?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "GCC Solid Waste Management",
+      "assignedOfficer": "MCGM Stormwater Chief Engineer R. Gokhale",
+      "officialRemarks": "Trash-skimmer boat operating 6 hours daily. Mumbai Waterfronts Action Network NGO deploying floating boom barrier.",
+      "supportCount": 142,
+      "supportedByUserIds": [
+        "user-citizen-mumbai",
+        "user-admin-1"
+      ],
+      "linkedPostId": "post-mumbai-1"
+    },
+    {
+      "id": "VX-2026-2301",
+      "title": "Toxic Chemical Foam Eruption & Weed Choking at Bellandur Lake Outflow",
+      "description": "White chemical foam billowing 8 feet high over the outflow weir and drifting across pedestrian pathways on Yemalur road. Severe foul odor and eye irritation reported by residents in nearby tech parks.",
+      "category": "Water Pollution",
+      "locality": "Bengaluru",
+      "address": "Yemalur-Bellandur Lake Spillway, Outer Ring Road corridor, Bengaluru 560037",
+      "latitude": 12.9352,
+      "longitude": 77.6784,
+      "visibility": "public",
+      "status": "In Progress",
+      "createdAt": "2026-10-26T11:00:00Z",
+      "updatedAt": "2026-11-04T16:30:00Z",
+      "userId": "user-citizen-blr",
+      "userDisplayName": "Rahul Hegde",
+      "userAvatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1541888946425-d0fbb186156f?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "Tamil Nadu Pollution Control Board (TNPCB)",
+      "assignedOfficer": "KSPCB Environmental Officer N. Swamy",
+      "officialRemarks": "Continuous aeration pumps running. Co-partnering with Bengaluru Lakes & Civic Forum to remove invasive hyacinth.",
+      "supportCount": 167,
+      "supportedByUserIds": [
+        "user-citizen-blr",
+        "user-admin-1"
+      ],
+      "linkedPostId": "post-blr-1"
+    },
+    {
+      "id": "VX-2026-2401",
+      "title": "Untreated Raw Sewage Inflow & Water Hyacinth Proliferation in Musi Riverbed",
+      "description": "Black water effluent pouring from open stormwater inlets into Musi river near Nayapul. Dense mosquito breeding and foul odor covering the historic bazaar belt in Old City.",
+      "category": "Water Pollution",
+      "locality": "Hyderabad",
+      "address": "Nayapul Bridge, Near Salar Jung Museum, Old City, Hyderabad 500002",
+      "latitude": 17.3616,
+      "longitude": 78.4747,
+      "visibility": "public",
+      "status": "Under Review",
+      "createdAt": "2026-10-29T13:00:00Z",
+      "updatedAt": "2026-11-05T11:20:00Z",
+      "userId": "user-citizen-1",
+      "userDisplayName": "Ananya Reddy",
+      "userAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "Chennai Metro Water & Sewerage (CMWSSB)",
+      "officialRemarks": "HMWSSB sewerage diversion plan under engineering survey.",
+      "supportCount": 85,
+      "supportedByUserIds": [
+        "user-citizen-1"
+      ],
+      "linkedPostId": "post-hyd-1"
+    },
+    {
+      "id": "VX-2026-2501",
+      "title": "Solid Waste Piling and Plastic Clogging along Adi Ganga (Tolly’s Nullah) Embankment",
+      "description": "Severe accumulation of uncollected household waste, clay idols remnants, and polythene blocking the historic tidal canal. Stagnant brackish water causing health risks for surrounding neighborhoods.",
+      "category": "Waste Management",
+      "locality": "Kolkata",
+      "address": "Kalighat Bridge Bank, Tolly’s Nullah Embankment, South Kolkata 700026",
+      "latitude": 22.5186,
+      "longitude": 88.3426,
+      "visibility": "public",
+      "status": "In Progress",
+      "createdAt": "2026-10-27T10:15:00Z",
+      "updatedAt": "2026-11-04T14:40:00Z",
+      "userId": "user-citizen-2",
+      "userDisplayName": "Sourav Chatterjee",
+      "userAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      "photos": [
+        "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=800&auto=format&fit=crop&q=80"
+      ],
+      "assignedDepartment": "GCC Solid Waste Management",
+      "assignedOfficer": "KMC Solid Waste Borough VIII Team",
+      "officialRemarks": "Mechanical dredging excavator mobilized. Bio-retaining nets installed at two bridges.",
+      "supportCount": 92,
+      "supportedByUserIds": [
+        "user-citizen-2"
+      ],
+      "linkedPostId": "post-kol-1"
+    }
+  ],
+  "referrals": [
+    {
+      "id": "REF-2026-8901",
+      "complaintId": "VX-2026-1042",
+      "complaintTitle": "Severe Garbage Accumulation & Open Dumping Near Tambaram Railway Station East",
+      "complainantName": "Priya Sundaram",
+      "locality": "Tambaram",
+      "referredBy": "Dr. R. Arumugam, IAS",
+      "referredByRole": "government",
+      "targetDepartment": "GCC Solid Waste Management",
+      "targetAgency": "Green Earth Chennai NGO",
+      "priority": "Urgent",
+      "actionMandate": "Immediate mechanized waste clearance, installation of 4 compactor bins, and daily monitoring with NGO partnership.",
+      "status": "Action Initiated",
+      "createdAt": "2026-10-25T11:00:00Z",
+      "officialDocketNumber": "DOK-GCC-2026-4402"
+    },
+    {
+      "id": "REF-2026-8902",
+      "complaintId": "VX-2026-2101",
+      "complaintTitle": "Severe Particulate Smog & Unregulated Open Plastic Burning near Anand Vihar ISBT",
+      "complainantName": "Amit Sharma",
+      "locality": "Delhi NCR",
+      "referredBy": "Zonal Municipal Directorate",
+      "referredByRole": "admin",
+      "targetDepartment": "State Pollution Control Board",
+      "targetAgency": "Clean Air & Yamuna Taskforce",
+      "priority": "Urgent",
+      "actionMandate": "Deploy water mist cannons, enforce night patrolling for illegal burning, and inspect emission filters on interstate buses.",
+      "status": "Action Initiated",
+      "createdAt": "2026-10-29T09:30:00Z",
+      "officialDocketNumber": "DOK-DPCC-2026-9011"
+    },
+    {
+      "id": "REF-2026-8903",
+      "complaintId": "VX-2026-2301",
+      "complaintTitle": "Toxic Chemical Foam Eruption & Weed Choking at Bellandur Lake Outflow",
+      "complainantName": "Rahul Hegde",
+      "locality": "Bengaluru",
+      "referredBy": "Municipal Commissioner Office",
+      "referredByRole": "government",
+      "targetDepartment": "State Pollution Control Board",
+      "targetAgency": "Bengaluru Lakes & Civic Forum",
+      "priority": "High",
+      "actionMandate": "Run bio-aeration pumps, clear floating water hyacinth, and seal unauthorized industrial chemical drainage pipes.",
+      "status": "Pending",
+      "createdAt": "2026-10-27T14:15:00Z",
+      "officialDocketNumber": "DOK-KSPCB-2026-3190"
+    }
+  ],
+  "posts": []
+}

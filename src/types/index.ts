@@ -220,3 +220,21 @@ export interface AppNotification {
   isRead: boolean;
 }
 
+export interface ComplaintReferral {
+  id: string; // e.g. "REF-2026-8901"
+  complaintId: string;
+  complaintTitle: string;
+  complainantName: string;
+  locality: string;
+  referredBy: string;
+  referredByRole: UserRole;
+  targetDepartment: string;
+  targetAgency?: string;
+  priority: 'Urgent' | 'High' | 'Normal';
+  actionMandate: string; // Action required / instructions
+  status: 'Pending' | 'Acknowledged' | 'Action Initiated' | 'Completed';
+  createdAt: string;
+  updatedAt?: string;
+  officialDocketNumber: string;
+}
+
